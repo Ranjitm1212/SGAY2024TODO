@@ -162,9 +162,52 @@ const Home: React.FC<Props> = ({ isDark, toggleTheme }) => {
           </TouchableOpacity>
         ))}
       </View>
+{filteredTodos.length === 0 ? (
+  <View style={styles.emptyContainer}>
+    <Text style={[styles.noTaskText, { color: colors.subText }]}>
+      📭 No tasks yet!
+    </Text>
+    <Text style={[styles.noTaskSubText, { color: colors.subText }]}>
+      Add one above 👆
+    </Text>
+  </View>
+) : (
+  <FlatList
+    data={filteredTodos}
+    keyExtractor={item => item.id}
+    renderItem={({ item }) => (
+      <View
+        style={[
+          styles.todoItem,
+          { backgroundColor: colors.card },
+        ]}
+      >
+        <TouchableOpacity
+          style={{ flex: 1 }}
+          onPress={() => toggleTodo(item.id)}
+        >
+          <Text
+            style={[
+              { color: colors.text, fontSize: 16 },
+              item.completed && {
+                textDecorationLine: "line-through",
+                color: colors.subText,
+              },
+            ]}
+          >
+            {item.title}
+          </Text>
+        </TouchableOpacity>
 
+        <TouchableOpacity onPress={() => deleteTodo(item.id)}>
+          <Text style={{ fontSize: 18 }}>❌</Text>
+        </TouchableOpacity>
+      </View>
+    )}
+  />
+)}
       {/* Todo List */}
-      <FlatList
+      {/* <FlatList
         data={filteredTodos}
         keyExtractor={item => item.id}
         renderItem={({ item }) => (
@@ -196,8 +239,17 @@ const Home: React.FC<Props> = ({ isDark, toggleTheme }) => {
             </TouchableOpacity>
           </View>
         )}
-      />
-
+      /> */}
+{/* {filteredTodos.length === 0 && (
+  <View style={styles.emptyContainer}>
+    <Text style={[styles.noTaskText, { color: colors.subText }]}>
+      📭 No tasks yet!
+    </Text>
+    <Text style={[styles.noTaskSubText, { color: colors.subText }]}>
+      Add one above 👆
+    </Text>
+  </View>
+)} */}
       <Text style={{ color: colors.subText, marginTop: 10 }}>
         Total Tasks: {todos.length}
       </Text>
@@ -257,4 +309,19 @@ const styles = StyleSheet.create({
     alignItems: "center",
     color: "black"
   },
+ emptyContainer: {
+  flex: 1,
+  justifyContent: "center",
+  alignItems: "center",
+},
+
+noTaskText: {
+  fontSize: 20,
+  fontWeight: "bold",
+},
+
+noTaskSubText: {
+  fontSize: 14,
+  marginTop: 6,
+},
 });
